@@ -1,0 +1,596 @@
+// Create: Frostworks for Forge 1.20.1 (Java 17, Create 6.0.4), next to the NeoForge 1.21.1 mod at the
+// root. The code is a port of the root's (same classes, same identifiers, same data): what differs is the loader's API
+// and Minecraft 1.20.1's. Assets come from the root unchanged; data are converted from the root's 1.21.1 format
+// (generateData120 below).
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+// The NeoForge mod (neoforge/) holds the assets, the data and the GameTest structure for now
+evaluationDependsOn(':neoforge')
+// the code both loaders share, word for word (shared/), compiled here and in neoforge/
+sourceSets.main.java.srcDir rootProject.file('shared/src/main/java')
+// JEI and Ponder, written for the versions of Minecraft 1.20.1 (JEI 15, Ponder 1.0.52), as in Create Kart
+sourceSets.main.java.srcDir rootProject.file('jei-1.20.1/src/main/java')
+sourceSets.main.java.srcDir rootProject.file('ponder-1.20.1/src/main/java')
+// what only Minecraft 1.20.1 needs, loader aside (common-1.20.1/)
+sourceSets.main.java.srcDir rootProject.file('common-1.20.1/src/main/java')
+
+// 47.3.0 in development, the least Tough As Nails 9.2.0.171 needs (runClientToughAsNails); the mod itself still
+// asks only 47.2.0 (mods.toml)
+def forgeVersion = '1.20.1-47.3.0'
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+repositories {
+    mavenCentral()
+    maven { name = 'CurseMaven (Create 6.0.4 for 1.20.1)'; url = 'https://cursemaven.com/' }
+    // Ponder, Registrate, Flywheel and MixinExtras as Create 6.0.4 bundles them (META-INF/jarjar, extracted in libs/)
+    flatDir { dirs 'libs' }
+    // Tough As Nails and GlitchCore for the Tough As Nails test game (not in git)
+    flatDir { dirs rootProject.file('libs-tan') }
+    // JEI 15 for the test game (runClient, the server runs, the GameTests), as the root does
+    maven { name = 'BlameJared (JEI)'; url = 'https://maven.blamejared.com/'; content { includeGroup 'mezz.jei' } }
+}
+
+// The Tough As Nails test game (runClientToughAsNails): no code of its own, only a run-time classpath with Tough As
+// Nails and GlitchCore, apart from the Cold Sweat one (runClientColdSweat, the same way: the two do not mix)
+sourceSets {
+    toughAsNails {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    coldSweat {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    // A stand-in for one interface of Greate's, to compile the Greate shaft passage against (compile only, never in
+    // our jar: at run time, Greate's own)
+    greateStub
+    // Stand-ins for three classes of TFC Ambiental (in TerraFirmaGreg-Core), to compile our hook into the player's
+    // temperature against (compile only, never in our jar: at run time, the pack's own)
+    ambientalStub
+}
+configurations {
+    toughAsNailsImplementation.extendsFrom implementation
+    toughAsNailsRuntimeOnly.extendsFrom runtimeOnly
+    coldSweatImplementation.extendsFrom implementation
+    coldSweatRuntimeOnly.extendsFrom runtimeOnly
+    // JEI in the main game only (runClient and the server runs), never in the Tough As Nails or Cold Sweat games
+    jeiRuntimeOnly
+    runtimeClasspath.extendsFrom jeiRuntimeOnly
+}
+
+legacyForge {
+    version = forgeVersion
+    addModdingDependenciesTo(sourceSets.toughAsNails)
+    addModdingDependenciesTo(sourceSets.coldSweat)
+    addModdingDependenciesTo(sourceSets.greateStub)
+    addModdingDependenciesTo(sourceSets.ambientalStub)
+
+    runs {
+        client {
+            client()
+            gameDirectory = project.file('run')
+        }
+        server {
+            server()
+            gameDirectory = project.file('run-server')
+            programArgument '--nogui'
+        }
+        gameTestServer {
+            type = 'gameTestServer'
+            gameDirectory = project.file('run-gametest')
+            systemProperty 'forge.enabledGameTestNamespaces', mod_id
+        }
+        // The game with Tough As Nails and GlitchCore (in libs-tan/), in its own directory (run-toughasnails/)
+        clientToughAsNails {
+            client()
+            gameDirectory = project.file('run-toughasnails')
+            sourceSet = sourceSets.toughAsNails
+        }
+        // The game with Cold Sweat, in its own directory (run-coldsweat/)
+        clientColdSweat {
+            client()
+            gameDirectory = project.file('run-coldsweat')
+            sourceSet = sourceSets.coldSweat
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+// Forge 1.20.1 reads the mixin configs from the jar's manifest (NeoForge: [[mixins]] in its mods.toml), and in the
+// development runs from an argument
+legacyForge.runs.configureEach { programArguments.addAll('--mixin.config', 'frostworks.mixins.json', '--mixin.config', 'frostworks.greate.mixins.json', '--mixin.config', 'frostworks.ambiental.mixins.json') }
+// Greate's hooks in their own config (optional: without Greate, nothing), TFC Ambiental's in another (optional too)
+tasks.named('jar', Jar) { manifest.attributes('MixinConfigs': 'frostworks.mixins.json,frostworks.greate.mixins.json,frostworks.ambiental.mixins.json') }
+
+dependencies {
+    modImplementation 'curse.maven:create-328085:6323270'
+    // in Create's jar at run time (jar-in-jar): compile only
+    modCompileOnly 'local:Ponder-Forge-1.20.1:1.0.52'
+    modCompileOnly 'local:Registrate-MC1.20:1.3.3'
+    modCompileOnly 'local:flywheel-forge-1.20.1:1.0.2'
+    compileOnly 'local:mixinextras-common:0.4.1' // inside mixinextras-forge, itself inside Create
+    compileOnly 'org.spongepowered:mixin:0.8.5'
+    compileOnly sourceSets.greateStub.output // Greate's ITieredKineticBlockEntity, compile only
+    compileOnly sourceSets.ambientalStub.output // TFC Ambiental's classes (TerraFirmaGreg-Core), compile only
+    // JEI 15 for 1.20.1, its API only (the recipe categories; optional at run time, as at the root)
+    modCompileOnly 'local:jei-1.20.1-common-api:15.20.0.106'
+}
+
+// The full JEI 15.20.0.106 (remapped for development) in runClient, as at the root. -PnoJei leaves it out, to check
+// that the mod starts without it.
+def jeiMods = obfuscation.createRemappingConfiguration(configurations.jeiRuntimeOnly)
+dependencies {
+    if (!project.hasProperty('noJei'))
+        add(jeiMods.name, 'mezz.jei:jei-1.20.1-forge:15.20.0.106')
+}
+
+// Tough As Nails 9.2.0.171 and GlitchCore 0.0.1.1 (Forge jars, remapped for development), in runClientToughAsNails only.
+// Our mod calls Tough As Nails by reflection: nothing to compile against.
+def toughAsNailsMods = obfuscation.createRemappingConfiguration(configurations.toughAsNailsRuntimeOnly)
+dependencies {
+    add(toughAsNailsMods.name, 'local:ToughAsNails-forge-1.20.1:9.2.0.171')
+    add(toughAsNailsMods.name, 'local:GlitchCore-forge-1.20.1:0.0.1.1')
+}
+
+// Cold Sweat 2.4.4 for Forge 1.20.1 (CurseForge file 9215370, remapped for development). Our cold room modifier
+// extends its TempModifier: compiled against it, never in our jar; the game with it is runClientColdSweat alone.
+def coldSweatMods = obfuscation.createRemappingConfiguration(configurations.coldSweatRuntimeOnly)
+dependencies {
+    modCompileOnly 'curse.maven:cold-sweat-506194:9215370'
+    add(coldSweatMods.name, 'curse.maven:cold-sweat-506194:9215370')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xmaxerrs' << '3000'
+}
+
+// ---- Resources: the root's assets as they are, its data converted to 1.20.1 ----------------------------------------
+
+def rootResources = rootProject.file('common-1.21.1/src/main/resources')
+def data120 = layout.buildDirectory.dir('generated/data-1.20.1')
+def testStructures = layout.buildDirectory.dir('generated/test-structures')
+
+tasks.register('generateData120', GenerateData120) {
+    source = new File(rootResources, 'data')
+    output = data120
+}
+
+// the GameTests' empty structures, written by the root (1.21.1 folder "structure"), here in "structures"
+tasks.register('copyTestStructures', Copy) {
+    dependsOn project(':neoforge').tasks.named('generateTestStructure')
+    from(project(':neoforge').layout.buildDirectory.dir('generated/resources/data/frostworks/structure'))
+    into(testStructures.map { it.dir('data/frostworks/structures') })
+}
+
+sourceSets.main.resources.srcDir(tasks.named('generateData120').map { it.output })
+sourceSets.main.resources.srcDir(tasks.named('copyTestStructures').map { testStructures.get() })
+
+processResources {
+    from(rootResources) {
+        exclude 'data/**', 'META-INF/neoforge.mods.toml'
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // this module's own files (src/main/resources) win
+    var props = [
+            version                    : version,
+            mod_id                     : mod_id,
+            mod_name                   : mod_name,
+            mod_author                 : mod_author,
+            mod_license                : mod_license,
+            mod_description            : mod_description,
+            mod_credits                : mod_credits,
+            toughasnails_version_range_forge: toughasnails_version_range_forge,
+            coldsweat_version_range    : coldsweat_version_range,
+    ]
+    inputs.properties(props)
+    filesMatching('META-INF/mods.toml') { expand props }
+    // NeoForge's model loaders (composite, item layers, fluid container) are Forge's own, under the forge namespace
+    filesMatching('assets/**/*.json') { filter { line -> line.replace('"neoforge:', '"forge:') } }
+}
+
+tasks.named('jar', Jar) { archiveClassifier = 'dev' }
+tasks.named('reobfJar') { archiveFileName = "${mod_id}-${version}-forge-1.20.1.jar" }
+tasks.matching { it.name == 'runServer' }.configureEach { standardInput = System.in }
+
+/**
+ * The root's data (1.21.1) written for 1.20.1: plural folders, ids as "item", Create's camelCase keys, its fluid
+ * ingredients, cooking results as plain ids, the 1.20.1 loot table forms.
+ */
+abstract class GenerateData120 extends DefaultTask {
+    @InputDirectory abstract DirectoryProperty getSource()
+    @OutputDirectory abstract DirectoryProperty getOutput()
+
+    @TaskAction void run() {
+        def src = source.get().asFile, out = output.get().asFile
+        project.delete(out)
+        def folders = ['recipe': 'recipes', 'loot_table': 'loot_tables', 'advancement': 'advancements',
+                       'structure': 'structures']
+        def tagFolders = ['block': 'blocks', 'item': 'items', 'fluid': 'fluids', 'entity_type': 'entity_types']
+        src.eachFileRecurse(groovy.io.FileType.FILES) { f ->
+            def parts = src.toPath().relativize(f.toPath()).toString().replace('\\', '/').split('/') as List
+            if (parts.size() > 1 && folders.containsKey(parts[1])) parts[1] = folders[parts[1]]
+            if (parts.size() > 2 && parts[1] == 'tags' && tagFolders.containsKey(parts[2])) parts[2] = tagFolders[parts[2]]
+            // The common fluid tags are "forge:" in 1.20.1 (data/c/tags/fluid/<name>.json is forge:<name>)
+            if (parts[0] == 'c' && parts.size() > 2 && parts[1] == 'tags' && parts[2] == 'fluids') parts[0] = 'forge'
+            // any other common tag (blocks, items) would be ignored by Forge 1.20.1: stop, to decide what it becomes
+            if (parts[0] == 'c' && parts.size() > 1 && parts[1] == 'tags')
+                throw new org.gradle.api.GradleException("a 1.21 common tag left in data/${parts.join('/')}")
+            def target = new File(out, 'data/' + parts.join('/'))
+            target.parentFile.mkdirs()
+            if (!f.name.endsWith('.json')) {
+                target.bytes = f.bytes
+                return
+            }
+            def json = new groovy.json.JsonSlurper().parseText(f.getText('UTF-8'))
+            if (json instanceof Map) conditions(json, parts.join('/'))
+            if (parts[1] == 'recipes') recipe(json)
+            if (parts[1] == 'loot_tables') loot(json)
+            def text = groovy.json.JsonOutput.toJson(json)
+            if (parts[1] == 'recipes' && text.contains('"tag":"c:'))
+                throw new org.gradle.api.GradleException("a 1.21 common tag left in ${parts.join('/')}")
+            if (parts[1] == 'tags' && text.contains('"#c:'))
+                throw new org.gradle.api.GradleException("a 1.21 common tag left in ${parts.join('/')}")
+            target.setText(groovy.json.JsonOutput.prettyPrint(text), 'UTF-8')
+        }
+    }
+
+    /**
+     * NeoForge's load conditions ("neoforge:conditions") as Forge 1.20.1 reads them ("conditions"): mod_loaded,
+     * not, or, and under forge:, the mod's own (frostworks:tfg_compat) as they are. Any other stops the build: Forge
+     * would load the file whatever the condition says.
+     */
+    static void conditions(Map json, String where) {
+        if (json.containsKey('conditions') && !json.containsKey('neoforge:conditions') && where.contains('/recipes/'))
+            throw new org.gradle.api.GradleException("$where: \"conditions\" is not NeoForge's key (neoforge:conditions)")
+        if (!json.containsKey('neoforge:conditions')) return
+        def list = json.remove('neoforge:conditions')
+        def converted = [conditions: list.collect { condition(it, where) }]
+        converted.putAll(json) // the conditions first, as written by hand on Forge
+        json.clear()
+        json.putAll(converted)
+    }
+
+    static Map condition(Object node, String where) {
+        if (!(node instanceof Map) || !(node.type instanceof String))
+            throw new org.gradle.api.GradleException("$where: a condition without a type: $node")
+        Map c = new LinkedHashMap(node)
+        switch (c.type) {
+            case 'neoforge:mod_loaded': c.type = 'forge:mod_loaded'; break
+            case 'neoforge:not': c.type = 'forge:not'; c.value = condition(c.value, where); break
+            case 'neoforge:or': c.type = 'forge:or'; c.values = c.values.collect { condition(it, where) }; break
+            case 'neoforge:and': c.type = 'forge:and'; c.values = c.values.collect { condition(it, where) }; break
+            case 'frostworks:tfg_compat': break
+            default: throw new org.gradle.api.GradleException("$where: condition ${c.type} is not converted for 1.20.1")
+        }
+        return c
+    }
+
+    static void recipe(Map r) {
+        String type = r.type
+        if (type == 'frostworks:cold_process') {
+            coldProcess(r)
+            return
+        }
+        if (type == 'frostworks:cold_fluid') {
+            coldFluid(r)
+            return
+        }
+        if (type == 'frostworks:food_preserving') {
+            foodPreserving(r)
+            return
+        }
+        if (type in ['minecraft:smelting', 'minecraft:blasting', 'minecraft:smoking', 'minecraft:campfire_cooking']
+                && r.result instanceof Map)
+            r.result = r.result.id // a plain id in 1.20.1
+        else if (r.result instanceof Map && r.result.id != null)
+            r.result.item = r.result.remove('id')
+        if (r.result instanceof Map && r.result.components instanceof Map)
+            r.result.nbt = nbt(r.result.remove('components'))
+        if (r.results instanceof List)
+            r.results.each { if (it instanceof Map && it.id != null) it.item = it.remove('id') }
+        if (r.ingredients instanceof List)
+            r.ingredients.each { if (it instanceof Map && it.type == 'neoforge:single') it.remove('type') }
+        [processing_time: 'processingTime', heat_requirement: 'heatRequirement', keep_held_item: 'keepHeldItem',
+         accept_mirrored: 'acceptMirrored'].each { k, v -> if (r.containsKey(k)) r[v] = r.remove(k) }
+        forgeTags(r)
+    }
+
+    /**
+     * A food preserving recipe (frostworks:food_preserving). Its keys are read as they are by Forge
+     * (Create's processing recipe and "level"): the item ingredient stays {"type": "frostworks:perishable_food"}, the
+     * fluid loses NeoForge's "neoforge:single" type. Any other key or form stops the build: it would be read wrongly.
+     */
+    static void foodPreserving(Map r) {
+        def where = "food preserving recipe"
+        def unknown = r.keySet() - ['type', 'ingredients', 'results', 'level', 'conditions']
+        if (unknown)
+            throw new org.gradle.api.GradleException("$where: keys $unknown are not converted for 1.20.1")
+        if (r.results != [])
+            throw new org.gradle.api.GradleException("$where: \"results\": [] is required (Create reads it), and empty")
+        if (!(r.level in [1, 2]))
+            throw new org.gradle.api.GradleException("$where: level ${r.level} is not 1 or 2")
+        def ingredients = r.ingredients
+        if (!(ingredients instanceof List) || ingredients.size() != 2)
+            throw new org.gradle.api.GradleException("$where: one food and one fluid, not $ingredients")
+        if (ingredients[0] != [type: 'frostworks:perishable_food'])
+            throw new org.gradle.api.GradleException("$where: the item is not {\"type\": \"frostworks:perishable_food\"}")
+        def fluid = ingredients[1]
+        if (!(fluid instanceof Map) || fluid.type != 'neoforge:single' || fluid.keySet() != ['type', 'fluid', 'amount'] as Set)
+            throw new org.gradle.api.GradleException("$where: the fluid is not a neoforge:single fluid: $fluid")
+        fluid.remove('type')
+    }
+
+    /**
+     * A cold processing file (frostworks:cold_process). Its ingredients and its steps' results are written as
+     * Create writes them in 1.21.1: results "id" -> "item" ("fluid" for a fluid result, with its "amount"); fluid
+     * ingredients lose NeoForge's "neoforge:single" type (the same fluid and amount in 1.20.1), "neoforge:tag" becomes
+     * "fluidTag". Any other form stops the build: it would be read wrongly on Forge.
+     */
+    static void coldProcess(Map r) {
+        def where = "cold process ${r.process}"
+        (r.ingredients ?: []).each { ingredient ->
+            if (!(ingredient instanceof Map))
+                throw new org.gradle.api.GradleException("$where: an ingredient is not an object: $ingredient")
+            if (ingredient.type == 'neoforge:single') {
+                ingredient.remove('type')
+            } else if (ingredient.type == 'neoforge:tag') { // a fluid tag (basin): Create's "fluidTag"
+                ingredient.remove('type')
+                forgeTags(ingredient)
+                ingredient.fluidTag = ingredient.remove('tag')
+            } else if (ingredient.type != null) {
+                throw new org.gradle.api.GradleException("$where: ingredient type ${ingredient.type} is not converted for 1.20.1")
+            }
+            def unknown = ingredient.keySet() - ['item', 'tag', 'chilled', 'fluid', 'fluidTag', 'amount']
+            if (unknown)
+                throw new org.gradle.api.GradleException("$where: ingredient keys $unknown are not converted for 1.20.1")
+        }
+        (r.steps ?: []).each { step ->
+            (step.results ?: []).each { result ->
+                // A fluid result (basin) has an amount: "id" -> "fluid", as Create writes it in 1.20.1
+                if (result.id != null)
+                    result[result.amount != null ? 'fluid' : 'item'] = result.remove('id')
+                def unknown = result.keySet() - ['item', 'fluid', 'count', 'amount', 'chance', 'copy', 'replaces']
+                if (unknown)
+                    throw new org.gradle.api.GradleException("$where: result keys $unknown are not converted for 1.20.1")
+            }
+        }
+        forgeTags(r)
+    }
+
+    /**
+     * A cold fluid (frostworks:cold_fluid). Its one fluid ingredient as Create writes it in 1.20.1:
+     * "neoforge:single" -> {"fluid", "amount"}, "neoforge:tag" -> {"fluidTag", "amount"} ("c:" tags as "forge:"). Any
+     * other form stops the build: it would be read wrongly on Forge.
+     */
+    static void coldFluid(Map r) {
+        def where = "cold fluid ${r.ingredients}"
+        if (!(r.ingredients instanceof List) || r.ingredients.size() != 1 || !(r.ingredients[0] instanceof Map))
+            throw new org.gradle.api.GradleException("$where: one fluid ingredient expected")
+        Map ingredient = r.ingredients[0]
+        if (ingredient.type == 'neoforge:single' && ingredient.keySet() == ['type', 'fluid', 'amount'] as Set) {
+            ingredient.remove('type')
+        } else if (ingredient.type == 'neoforge:tag' && ingredient.keySet() == ['type', 'tag', 'amount'] as Set) {
+            ingredient.remove('type')
+            forgeTags(ingredient)
+            ingredient.fluidTag = ingredient.remove('tag')
+        } else {
+            throw new org.gradle.api.GradleException("$where: not a neoforge:single or neoforge:tag fluid, not converted for 1.20.1")
+        }
+    }
+
+    /**
+     * The common tags are "forge:" in 1.20.1 ("c:" since 1.21): c:storage_blocks/iron is forge:storage_blocks/iron,
+     * c:barrels/wooden is forge:barrels/wooden. Left as "c:", the ingredient matches nothing on Forge.
+     */
+    static void forgeTags(Object node) {
+        if (node instanceof Map) {
+            Map m = node
+            if (m.tag instanceof String && m.tag.startsWith('c:')) m.tag = 'forge:' + m.tag.substring(2)
+            m.values().each { forgeTags(it) }
+        } else if (node instanceof List) node.each { forgeTags(it) }
+    }
+
+    /**
+     * Item components as Forge 1.20.1 reads them, in NBT (a recipe's "nbt", set_nbt's "tag"): only ours,
+     * frostworks:chilled (ChilledMark: a byte there). Any other component stops the build.
+     */
+    static String nbt(Map components) {
+        def unknown = components.keySet() - ['frostworks:chilled']
+        if (unknown)
+            throw new org.gradle.api.GradleException("item components $unknown are not converted for 1.20.1")
+        return '{"frostworks:chilled":1b}'
+    }
+
+    static void loot(Object node) {
+        if (node instanceof Map) {
+            Map m = node
+            if (m.type == 'minecraft:loot_table' && m.containsKey('value')) m.name = m.remove('value')
+            if (m.function == 'minecraft:set_components' && m.components instanceof Map) {
+                m.function = 'minecraft:set_nbt'
+                m.tag = nbt(m.remove('components'))
+            }
+            if (m.condition == 'minecraft:match_tool' && m.predicate instanceof Map
+                    && m.predicate.predicates instanceof Map && m.predicate.predicates['minecraft:enchantments'] != null) {
+                def enchantments = m.predicate.predicates['minecraft:enchantments'].collect {
+                    [enchantment: it.enchantments, levels: it.levels]
+                }
+                m.predicate = [enchantments: enchantments]
+            }
+            m.values().each { loot(it) }
+        } else if (node instanceof List) node.each { loot(it) }
+    }
+}
+
+// The root's GameTests run with the server config of its run-gametest/ (where a vent covers 16 cells, the default
+// being 24): the same file here, so that both run the same tests in the same conditions.
+tasks.register('copyGameTestConfig', Copy) {
+    from(rootProject.file('run-gametest/config')) { include 'frostworks-server.toml' }
+    into(project.file('run-gametest/world/serverconfig'))
+}
+tasks.matching { it.name == 'runGameTestServer' }.configureEach { dependsOn 'copyGameTestConfig' }
+
+// libs/ (ignored by git): Ponder, Registrate, Flywheel and MixinExtras as Create 6.0.4 bundles them, and MixinExtras'
+// own jar inside its Forge jar. Run once on a fresh clone: ./gradlew :forge:extractCreateLibs (JEI's API, if wanted,
+// is copied there by hand: jei-1.20.1-common-api-15.20.0.106.jar).
+tasks.register('extractCreateLibs') {
+    def create = configurations.detachedConfiguration(dependencies.create('curse.maven:create-328085:6323270'))
+    create.transitive = false
+    doLast {
+        def libs = project.file('libs')
+        libs.mkdirs()
+        project.copy {
+            from(project.zipTree(create.singleFile)) { include 'META-INF/jarjar/*.jar' }
+            into libs
+            eachFile { it.path = it.name }
+            includeEmptyDirs = false
+        }
+        project.copy {
+            from(project.zipTree(new File(libs, 'mixinextras-forge-0.4.1.jar'))) { include 'META-INF/jars/*.jar' }
+            into libs
+            eachFile { it.path = 'mixinextras-common-0.4.1.jar' }
+            includeEmptyDirs = false
+        }
+    }
+}
+
+// The two config classes are written once, for NeoForge (neoforge/src/main/java/com/frostworks/
+// FwConfig.java and FwClientConfig.java). Forge's are the same text with ForgeConfigSpec in place of ModConfigSpec,
+// whose API is the same: generated here, never edited by hand.
+def generatedConfig = layout.buildDirectory.dir('generated/sources/config')
+def generateConfig = tasks.register('generateConfigFromNeoForge', Copy) {
+    from(rootProject.file('neoforge/src/main/java')) {
+        include 'com/frostworks/FwConfig.java', 'com/frostworks/FwClientConfig.java', 'com/frostworks/FwCommonConfig.java'
+    }
+    into generatedConfig
+    filter { String line ->
+        line.replace('net.neoforged.neoforge.common.ModConfigSpec', 'net.minecraftforge.common.ForgeConfigSpec')
+                .replace('ModConfigSpec', 'ForgeConfigSpec')
+    }
+}
+sourceSets.main.java.srcDir(generateConfig.map { it.destinationDir })
+
+// The GameTests are written once (shared/src/gametest/java), without the loader's two annotations;
+// this build adds its own (GameTestHolder, PrefixGameTestTemplate) to every test class.
+def generatedGameTests = layout.buildDirectory.dir('generated/sources/gametest')
+def generateGameTests = tasks.register('generateGameTests', Copy) {
+    from rootProject.file('shared/src/gametest/java')
+    into generatedGameTests
+    filter { String line ->
+        line ==~ /^public final class \w+GameTests\b.*/
+                ? "@net.minecraftforge.gametest.GameTestHolder(com.frostworks.Frostworks.MODID)\n" +
+                  "@net.minecraftforge.gametest.PrefixGameTestTemplate(false)\n" + line
+                : line
+    }
+}
+sourceSets.main.java.srcDir(generateGameTests.map { it.destinationDir })
+
+// Code written once against the loader's fluid and item API, with NeoForge's names
+// (shared/src/loader/java, compiled as it is by neoforge/). Forge's API is the same under other names: they are swapped
+// here. Add a pair only for an API that is truly the same on both loaders.
+def loaderNames = [
+        'net.neoforged.neoforge.fluids.'                     : 'net.minecraftforge.fluids.',
+        'net.neoforged.neoforge.items.'                      : 'net.minecraftforge.items.',
+        'net.neoforged.neoforge.common.SoundActions'         : 'net.minecraftforge.common.SoundActions',
+        'net.neoforged.neoforge.client.extensions.common.'   : 'net.minecraftforge.client.extensions.common.',
+        'BaseFlowingFluid'                                   : 'ForgeFlowingFluid',
+]
+def generatedLoaderSources = layout.buildDirectory.dir('generated/sources/loader')
+def generateLoaderSources = tasks.register('generateLoaderSources', Copy) {
+    from rootProject.file('shared/src/loader/java')
+    into generatedLoaderSources
+    filter { String line -> loaderNames.inject(line) { l, e -> l.replace(e.key, e.value) } }
+}
+sourceSets.main.java.srcDir(generateLoaderSources.map { it.destinationDir })
+// the shared GameTests use the same fluid and item API: same names swapped
+tasks.named('generateGameTests', Copy) {
+    filter { String line -> loaderNames.inject(line) { l, e -> l.replace(e.key, e.value) } }
+}
+
+// ---- The TerraFirmaGreg test game ------ ------------------------------------------------------------------------------
+// The pack (TerraFirmaGreg-Modern 0.13.17, 268 mods) runs as players run it: a real Forge 1.20.1-47.4.13 install in
+// libs-tfg/minecraft (its official installer), the pack's mods and files in run-tfg/ (both ignored by git), no
+// remapping. runClientTerraFirmaGreg builds our jar, puts it in run-tfg/mods in place of the last one, and starts that
+// client offline (as the development runs do), with Java 17. Missing libraries are fetched from the version files.
+def tfgMinecraft = rootProject.file('libs-tfg/minecraft')
+def tfgInstance = rootProject.file('run-tfg')
+def tfgVersion = '1.20.1-forge-47.4.13'
+def tfgJava = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) }
+tasks.register('runClientTerraFirmaGreg', Exec) {
+    group = 'mod development'
+    description = 'Starts the TerraFirmaGreg pack (run-tfg/) with this build of Frostworks in it.'
+    dependsOn 'reobfJar'
+    workingDir tfgInstance
+    doFirst {
+        def forgeJson = new File(tfgMinecraft, "versions/$tfgVersion/${tfgVersion}.json")
+        def vanillaJson = new File(tfgMinecraft, 'versions/1.20.1/1.20.1.json')
+        if (!forgeJson.exists() || !vanillaJson.exists() || !new File(tfgInstance, 'mods').isDirectory())
+            throw new GradleException('The TerraFirmaGreg instance is not installed (libs-tfg/minecraft, run-tfg/mods): ' +
+                    'install the pack and its Forge there first (a local setup, not in the repository)')
+        // our jar, in place of the previous one
+        def mods = new File(tfgInstance, 'mods')
+        mods.listFiles().findAll { it.name.startsWith("${mod_id}-") && it.name.endsWith('.jar') }.each { it.delete() }
+        project.copy { from tasks.named('reobfJar').get().archiveFile; into mods }
+
+        def slurp = { File f -> new groovy.json.JsonSlurper().parse(f) }
+        def forge = slurp(forgeJson), vanilla = slurp(vanillaJson)
+        def libraries = new File(tfgMinecraft, 'libraries')
+        // a library's rules, for Windows
+        def allowed = { lib ->
+            if (lib.rules == null) return true
+            boolean ok = false
+            lib.rules.each { rule -> if (rule.os == null || rule.os.name == 'windows') ok = rule.action == 'allow' }
+            ok
+        }
+        def classpath = []
+        (forge.libraries + vanilla.libraries).findAll(allowed).each { lib ->
+            def artifact = lib.downloads?.artifact
+            if (artifact == null) return
+            def file = new File(libraries, artifact.path)
+            if (!file.exists() && artifact.url) {
+                file.parentFile.mkdirs()
+                new URL(artifact.url).withInputStream { input -> file.withOutputStream { it << input } }
+            }
+            if (!classpath.contains(file.absolutePath)) classpath << file.absolutePath
+        }
+        def assets = new File(System.getProperty('user.home'), '.gradle/caches/neoformruntime/assets')
+        def natives = new File(tfgMinecraft, 'natives')
+        natives.mkdirs()
+        def vars = [library_directory  : libraries.absolutePath, classpath_separator: File.pathSeparator,
+                    version_name       : tfgVersion, natives_directory: natives.absolutePath,
+                    launcher_name      : 'frostworks', launcher_version: '1', classpath: classpath.join(File.pathSeparator),
+                    auth_player_name   : 'Dev', game_directory: tfgInstance.absolutePath, assets_root: assets.absolutePath,
+                    assets_index_name  : vanilla.assets, auth_uuid: '00000000-0000-0000-0000-000000000000',
+                    auth_access_token  : '0', clientid: '0', auth_xuid: '0', user_type: 'legacy', version_type: 'release']
+        def expand = { String s -> vars.inject(s) { text, e -> text.replace('${' + e.key + '}', e.value) } }
+        def strings = { list -> list.findAll { it instanceof String }.collect { expand(it) } }
+        executable = tfgJava.get().executablePath.asFile.absolutePath
+        // -PmixinExport: Mixin writes Create's kinetic classes as transformed into run-tfg/.mixin.out, to see our hooks
+        def export = project.hasProperty('mixinExport')
+                ? ['-Dmixin.debug.export=true', '-Dmixin.debug.export.filter=com.simibubi.create.content.kinetics.*'] : []
+        args(['-Xmx10G', '-Xms2G'] + export + strings(vanilla.arguments.jvm) + strings(forge.arguments.jvm) + [forge.mainClass]
+                + strings(vanilla.arguments.game) + strings(forge.arguments.game)
+                // -PquickPlay="<world folder>": straight into that world of run-tfg/saves
+                + (project.hasProperty('quickPlay') ? ['--quickPlaySingleplayer', project.property('quickPlay').toString()] : []))
+    }
+}
+
+// TerraFirmaCraft 1.20.1-3.2.28 (CurseForge file 9272468, the official jar), compile only: food preserving
+// (compat/tfc) puts its traits on TFC's food. Never in our jar; called only when TFC is loaded.
+dependencies {
+    modCompileOnly 'curse.maven:terrafirmacraft-302973:9272468'
+}

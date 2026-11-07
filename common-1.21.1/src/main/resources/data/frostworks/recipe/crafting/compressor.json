@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [ { "type": "neoforge:not", "value": { "type": "frostworks:tfg_compat" } } ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": { "item": "create:iron_sheet" },
+    "A": { "item": "create:andesite_alloy" },
+    "B": { "item": "minecraft:iron_bars" },
+    "P": { "item": "create:mechanical_pump" }
+  },
+  "pattern": [
+    "SAS",
+    "BPB",
+    "SAS"
+  ],
+  "result": { "count": 1, "id": "frostworks:compressor" }
+}

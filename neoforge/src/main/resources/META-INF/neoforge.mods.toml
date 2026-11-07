@@ -1,0 +1,61 @@
+modLoader = "javafml"
+loaderVersion = "${neoforge_loader_version_range}"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+displayName = "${mod_name}"
+# Our icon (branding/frostworks-icon-source.png, shrunk to 256 x 256)
+logoFile = "logo.png"
+authors = "${mod_author}"
+description = '''${mod_description}'''
+credits = "${mod_credits}"
+
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_min_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create"
+type = "required"
+versionRange = "${create_version_range}"
+ordering = "AFTER"
+side = "BOTH"
+
+# Optional: the mod works without it (recipe categories); declared so that the game reports a version it does not support
+[[dependencies.${mod_id}]]
+modId = "jei"
+type = "optional"
+versionRange = "${jei_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+# Tough As Nails, optional (a closed cold room makes its player cold); the versions its API was read in
+[[dependencies.${mod_id}]]
+modId = "toughasnails"
+type = "optional"
+versionRange = "${toughasnails_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+# Cold Sweat, optional (a closed cold room is a cold place for it); 2.4, whose API this mod is built against
+[[dependencies.${mod_id}]]
+modId = "cold_sweat"
+type = "optional"
+versionRange = "${coldsweat_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[mixins]]
+config = "frostworks.mixins.json"

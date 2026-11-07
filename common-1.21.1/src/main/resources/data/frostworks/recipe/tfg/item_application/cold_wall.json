@@ -1,0 +1,6 @@
+{
+  "neoforge:conditions": [ { "type": "frostworks:tfg_compat" } ],
+  "type": "create:item_application",
+  "ingredients": [ { "tag": "c:stone" }, { "item": "frostworks:cold_iron_sheet" } ],
+  "results": [ { "id": "frostworks:cold_wall" } ]
+}

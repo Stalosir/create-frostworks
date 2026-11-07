@@ -1,0 +1,13 @@
+{
+  "values": {
+    "minecraft:ice": {
+      "value": 0.11111111
+    },
+    "minecraft:packed_ice": {
+      "value": 1
+    },
+    "minecraft:blue_ice": {
+      "value": 9
+    }
+  }
+}

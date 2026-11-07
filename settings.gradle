@@ -1,0 +1,16 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.neoforged.net/releases' }
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.9.0'
+}
+
+rootProject.name = 'create_frostworks'
+
+// The NeoForge 1.21.1 mod (Create 6.0.10) and the Forge 1.20.1 one (Create 6.0.4)
+include 'neoforge'
+include 'forge'

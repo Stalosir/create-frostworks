@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [ { "type": "neoforge:not", "value": { "type": "frostworks:tfg_compat" } } ],
+  "type": "frostworks:infusing",
+  "ingredients": [
+    {
+      "item": "create:iron_sheet"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 500,
+      "fluid": "frostworks:cold_gas"
+    }
+  ],
+  "results": [
+    {
+      "id": "frostworks:cold_iron_sheet"
+    }
+  ]
+}

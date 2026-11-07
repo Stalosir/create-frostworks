@@ -1,0 +1,13 @@
+{
+  "neoforge:conditions": [ { "type": "frostworks:tfg_compat" } ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": { "tag": "c:ingots/tin_alloy" },
+    "B": { "tag": "tfg:metal_bars" },
+    "P": { "tag": "frostworks:pumps" },
+    "S": { "tag": "c:plates/wrought_iron" }
+  },
+  "pattern": [ "SAS", "BPB", "SAS" ],
+  "result": { "count": 1, "id": "frostworks:compressor" }
+}

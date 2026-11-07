@@ -1,0 +1,15 @@
+{
+  "type": "frostworks:freezing",
+  "ingredients": [
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:ice"
+    }
+  ]
+}

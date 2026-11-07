@@ -1,0 +1,13 @@
+{
+  "conditions": [ { "type": "forge:mod_loaded", "modid": "greate" } ],
+  "type": "frostworks:cold_process",
+  "process": "greate:crushing",
+  "recipe": "",
+  "mode": "bonus",
+  "ingredients": [ { "tag": "forge:ores", "chilled": true }, { "tag": "forge:raw_materials", "chilled": true } ],
+  "steps": [
+    { "results": [ { "copy": "main", "count": 1, "chance": 0.15 } ] },
+    { "temperature": -10, "results": [ { "copy": "main", "count": 1, "chance": 0.25 } ] },
+    { "temperature": -20, "results": [ { "copy": "main", "count": 1, "chance": 0.35 } ] }
+  ]
+}

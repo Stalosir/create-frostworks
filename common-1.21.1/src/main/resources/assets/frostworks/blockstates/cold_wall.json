@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "tint=none": { "model": "frostworks:block/cold_wall" },
+    "tint=white": { "model": "frostworks:block/cold_wall_tint/cold_wall_white" },
+    "tint=orange": { "model": "frostworks:block/cold_wall_tint/cold_wall_orange" },
+    "tint=magenta": { "model": "frostworks:block/cold_wall_tint/cold_wall_magenta" },
+    "tint=light_blue": { "model": "frostworks:block/cold_wall_tint/cold_wall_light_blue" },
+    "tint=yellow": { "model": "frostworks:block/cold_wall_tint/cold_wall_yellow" },
+    "tint=lime": { "model": "frostworks:block/cold_wall_tint/cold_wall_lime" },
+    "tint=pink": { "model": "frostworks:block/cold_wall_tint/cold_wall_pink" },
+    "tint=light_gray": { "model": "frostworks:block/cold_wall_tint/cold_wall_light_gray" },
+    "tint=cyan": { "model": "frostworks:block/cold_wall_tint/cold_wall_cyan" },
+    "tint=purple": { "model": "frostworks:block/cold_wall_tint/cold_wall_purple" },
+    "tint=blue": { "model": "frostworks:block/cold_wall_tint/cold_wall_blue" },
+    "tint=brown": { "model": "frostworks:block/cold_wall_tint/cold_wall_brown" },
+    "tint=green": { "model": "frostworks:block/cold_wall_tint/cold_wall_green" },
+    "tint=red": { "model": "frostworks:block/cold_wall_tint/cold_wall_red" },
+    "tint=black": { "model": "frostworks:block/cold_wall_tint/cold_wall_black" }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "frostworks:infusing",
+  "ingredients": [
+    { "tag": "c:ores" },
+    { "type": "neoforge:single", "amount": 100, "fluid": "frostworks:frosium" }
+  ],
+  "results": []
+}

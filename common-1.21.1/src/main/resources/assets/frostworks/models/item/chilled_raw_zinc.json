@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "loader": "neoforge:item_layers",
+  "textures": {
+    "layer0": "create:item/raw_zinc",
+    "layer1": "frostworks:item/ore/raw_zinc_frigorifie"
+  },
+  "render_types": {
+    "minecraft:cutout": [0],
+    "minecraft:translucent": [1]
+  }
+}

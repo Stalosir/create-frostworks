@@ -1,0 +1,7 @@
+{
+  "neoforge:conditions": [ { "type": "frostworks:tfg_compat" } ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [ { "tag": "frostworks:fans" }, { "item": "frostworks:cold_wall" } ],
+  "result": { "count": 1, "id": "frostworks:vent" }
+}

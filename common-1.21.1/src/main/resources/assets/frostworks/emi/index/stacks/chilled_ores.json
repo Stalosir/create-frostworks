@@ -1,0 +1,28 @@
+{
+  "removed": [
+    "item:frostworks:chilled_coal_ore",
+    "item:frostworks:chilled_deepslate_coal_ore",
+    "item:frostworks:chilled_copper_ore",
+    "item:frostworks:chilled_deepslate_copper_ore",
+    "item:frostworks:chilled_iron_ore",
+    "item:frostworks:chilled_deepslate_iron_ore",
+    "item:frostworks:chilled_gold_ore",
+    "item:frostworks:chilled_deepslate_gold_ore",
+    "item:frostworks:chilled_redstone_ore",
+    "item:frostworks:chilled_deepslate_redstone_ore",
+    "item:frostworks:chilled_lapis_ore",
+    "item:frostworks:chilled_deepslate_lapis_ore",
+    "item:frostworks:chilled_diamond_ore",
+    "item:frostworks:chilled_deepslate_diamond_ore",
+    "item:frostworks:chilled_emerald_ore",
+    "item:frostworks:chilled_deepslate_emerald_ore",
+    "item:frostworks:chilled_nether_gold_ore",
+    "item:frostworks:chilled_nether_quartz_ore",
+    "item:frostworks:chilled_zinc_ore",
+    "item:frostworks:chilled_deepslate_zinc_ore",
+    "item:frostworks:chilled_raw_iron",
+    "item:frostworks:chilled_raw_copper",
+    "item:frostworks:chilled_raw_gold",
+    "item:frostworks:chilled_raw_zinc"
+  ]
+}

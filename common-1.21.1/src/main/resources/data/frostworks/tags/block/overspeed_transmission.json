@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "create:shaft",
+    "create:cogwheel",
+    "create:large_cogwheel",
+    "create:gearbox",
+    "create:speedometer",
+    "frostworks:shaft_passage"
+  ]
+}

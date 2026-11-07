@@ -1,0 +1,20 @@
+{
+  "loader": "neoforge:composite",
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/emerald_ore"
+  },
+  "children": {
+    "ore": {
+      "parent": "minecraft:block/emerald_ore",
+      "render_type": "minecraft:solid"
+    },
+    "frost": {
+      "parent": "frostworks:block/ore/frost_shell",
+      "textures": {
+        "frost": "frostworks:block/ore/emerald_ore_frigorifie"
+      },
+      "render_type": "minecraft:translucent"
+    }
+  }
+}

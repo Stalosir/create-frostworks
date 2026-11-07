@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=east": { "model": "frostworks:block/cryo_infuser/block", "y": 90 },
+    "facing=north": { "model": "frostworks:block/cryo_infuser/block" },
+    "facing=south": { "model": "frostworks:block/cryo_infuser/block", "y": 180 },
+    "facing=west": { "model": "frostworks:block/cryo_infuser/block", "y": 270 }
+  }
+}

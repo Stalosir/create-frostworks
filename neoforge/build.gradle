@@ -1,0 +1,296 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev'
+}
+
+base {
+    archivesName = mod_id
+}
+
+// Named like the Forge jar (forge/build.gradle), so both builds sit side by side
+tasks.named('jar', Jar) { archiveFileName = "${mod_id}-${version}-neoforge-${minecraft_version}.jar" }
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+}
+
+repositories {
+    mavenCentral()
+    // Create, Ponder, Flywheel
+    maven { name = 'createmod'; url = 'https://maven.createmod.net' }
+    // Registrate (maven.tterrag.com answers 404 for MC1.21-1.3.0+67)
+    maven { name = 'ithundxr'; url = 'https://maven.ithundxr.dev/snapshots' }
+    // JEI (run time only, to look at the recipes in the test game)
+    maven { name = 'blamejared'; url = 'https://maven.blamejared.com' }
+    // Cold Sweat (CurseForge files through CurseMaven), compile only, and its test game
+    maven { name = 'CurseMaven'; url = 'https://cursemaven.com/'; content { includeGroup 'curse.maven' } }
+}
+
+// Pilot: a separate tiny mod (frostworks_pilot, source set "pilot") that drives a client for screenshots.
+// Only the runClientPilote task loads it, in its own game directory (run-pilote/). runClient never sees it.
+sourceSets {
+    pilot {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    // The Tough As Nails test game (runClientToughAsNails): no code of its own, only a run-time classpath with
+    // Tough As Nails and GlitchCore (libs-tan/, not in git), apart from the Cold Sweat one to come (the two do not mix)
+    toughAsNails {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    // The Cold Sweat test game (runClientColdSweat), the same way; never with Tough As Nails (the two do not mix)
+    coldSweat {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    // The TerraFirmaCraft test game (runClientTerraFirmaCraft): TFC 4.2.13 and Patchouli, with JEI
+    terraFirmaCraft {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations {
+    pilotImplementation.extendsFrom implementation
+    pilotRuntimeOnly.extendsFrom runtimeOnly // JEI in the pilot game too
+    toughAsNailsImplementation.extendsFrom implementation // Create; not JEI: Tough As Nails and GlitchCore only
+    coldSweatImplementation.extendsFrom implementation // Create; Cold Sweat only
+    terraFirmaCraftImplementation.extendsFrom implementation // Create; TFC and Patchouli
+    terraFirmaCraftRuntimeOnly.extendsFrom runtimeOnly // JEI, for the "Preserving" category
+}
+
+neoForge {
+    version = neoforge_version
+    addModdingDependenciesTo(sourceSets.pilot)
+    addModdingDependenciesTo(sourceSets.toughAsNails)
+    addModdingDependenciesTo(sourceSets.coldSweat)
+    addModdingDependenciesTo(sourceSets.terraFirmaCraft)
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+        frostworks_pilot {
+            sourceSet sourceSets.pilot
+        }
+    }
+
+    runs {
+        // Plain game for the player: only the mod, nothing automatic.
+        client {
+            client()
+            gameDirectory = rootProject.file('run')
+            loadedMods = [mods."${mod_id}"]
+        }
+        server {
+            server()
+            gameDirectory = rootProject.file('run')
+            programArgument '--nogui'
+            loadedMods = [mods."${mod_id}"]
+        }
+        gameTestServer {
+            type = 'gameTestServer'
+            gameDirectory = rootProject.file('run-gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+            loadedMods = [mods."${mod_id}"]
+        }
+        // Scripted client for Claude's own checks (creates a world, takes screenshots, quits). Never part of runClient.
+        clientPilote {
+            client()
+            gameDirectory = rootProject.file('run-pilote')
+            sourceSet = sourceSets.pilot
+            loadedMods = [mods."${mod_id}", mods.frostworks_pilot]
+            // ./gradlew runClientPilote -Pscenario=walls|loop|t1
+            systemProperty 'frostworks.pilot.scenario', (project.findProperty('scenario') ?: 't1').toString()
+        }
+        // The game with Tough As Nails and GlitchCore (in libs-tan/), in its own directory (run-toughasnails/)
+        clientToughAsNails {
+            client()
+            gameDirectory = rootProject.file('run-toughasnails')
+            sourceSet = sourceSets.toughAsNails
+            loadedMods = [mods."${mod_id}"]
+        }
+        // The game with Cold Sweat, in its own directory (run-coldsweat/)
+        clientColdSweat {
+            client()
+            gameDirectory = rootProject.file('run-coldsweat')
+            sourceSet = sourceSets.coldSweat
+            loadedMods = [mods."${mod_id}"]
+        }
+        // The game with TerraFirmaCraft (food preserving), in its own directory (run-tfc/)
+        clientTerraFirmaCraft {
+            client()
+            gameDirectory = rootProject.file('run-tfc')
+            sourceSet = sourceSets.terraFirmaCraft
+            loadedMods = [mods."${mod_id}"]
+        }
+    }
+}
+
+// Generated resources (empty GameTest structure, see generateTestStructure)
+def generatedResources = layout.buildDirectory.dir('generated/resources')
+sourceSets.main.resources.srcDir generatedResources
+// The code both loaders share, word for word (shared/), compiled here and in forge/
+sourceSets.main.java.srcDir rootProject.file('shared/src/main/java')
+// code written once against the loader's fluid and item API, with NeoForge's names (Forge's build swaps them)
+sourceSets.main.java.srcDir rootProject.file('shared/src/loader/java')
+// JEI and Ponder, written for the versions of Minecraft 1.21.1 (JEI 19, Ponder 1.0.82), as in Create Kart
+sourceSets.main.java.srcDir rootProject.file('jei-1.21.1/src/main/java')
+sourceSets.main.java.srcDir rootProject.file('ponder-1.21.1/src/main/java')
+// what only Minecraft 1.21.1 needs, loader aside (common-1.21.1/)
+sourceSets.main.java.srcDir rootProject.file('common-1.21.1/src/main/java')
+// The assets and data both loaders share (the Forge build converts the data to 1.20.1)
+sourceSets.main.resources.srcDir rootProject.file('common-1.21.1/src/main/resources')
+
+dependencies {
+    // Create is compiled against (KineticBlockEntity, pump, behaviours, goggles, Registrate).
+    // Coordinates: https://wiki.createmod.net/developers/depend-on-create/neoforge-1.21.1
+    implementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
+    implementation "net.createmod.ponder:ponder-neoforge:${ponder_version}"
+    implementation "dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}"
+    implementation "com.tterrag.registrate:Registrate:${registrate_version}"
+
+    // JEI: its API at compile time only, for our recipe category (loaded by JEI alone: the mod runs
+    // without it), and the full jar in the test game (runClient, the pilot, the GameTests). -PnoJei leaves it out at run
+    // time, to check that the mod starts without JEI.
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    if (!project.hasProperty('noJei'))
+        runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+
+    // The pure-Java room search only uses fastutil (same version as Minecraft 1.21.1), not Minecraft itself:
+    // unit tests run without the game on the classpath.
+    testImplementation 'it.unimi.dsi:fastutil:8.5.12'
+    // Gson to parse the resource JSON files in the asset check
+    testImplementation 'com.google.code.gson:gson:2.11.0'
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// Create Nuclear at run time only (jar in libs-nuclear/, not in git). Never a dependency of our mod: our data file
+// for its reactor coolants is simply ignored when it is absent.
+def nuclearJar = rootProject.file('libs-nuclear/createnuclear-2.0.0-neoforge.jar')
+if (nuclearJar.exists()) {
+    dependencies { runtimeOnly files(nuclearJar) }
+}
+
+// Tough As Nails 10.1.0.13 and GlitchCore 2.1.0.2 (jars in libs-tan/, not in git), in runClientToughAsNails only. Our
+// mod calls Tough As Nails by reflection: nothing to compile against.
+dependencies {
+    toughAsNailsRuntimeOnly files(rootProject.file('libs-tan/ToughAsNails-neoforge-1.21.1-10.1.0.13.jar'),
+            rootProject.file('libs-tan/GlitchCore-neoforge-1.21.1-2.1.0.2.jar'))
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+    // The asset check looks into the unpacked Create jar when it is present (it is not in git).
+    systemProperty 'frostworks.createDir', rootProject.file('create').absolutePath
+    systemProperty 'frostworks.resourcesDir', rootProject.file('common-1.21.1/src/main/resources').absolutePath
+    // Vanilla assets (unpacked by ModDevGradle) and the Create jar, for the asset check
+    systemProperty 'frostworks.vanillaJar',
+            file("build/moddev/artifacts/neoforge-${neoforge_version}-client-extra-aka-minecraft-resources.jar").absolutePath
+    def compileClasspath = configurations.compileClasspath
+    doFirst {
+        systemProperty 'frostworks.createJar', compileClasspath.find { it.name.startsWith("create-${minecraft_version}") }.absolutePath
+    }
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+}
+
+processResources {
+    var props = [
+            version                      : version,
+            minecraft_version_range      : minecraft_version_range,
+            mod_id                       : mod_id,
+            mod_name                     : mod_name,
+            mod_author                   : mod_author,
+            mod_license                  : mod_license,
+            mod_description              : mod_description,
+            neoforge_min_version         : neoforge_min_version,
+            neoforge_loader_version_range: neoforge_loader_version_range,
+            create_version_range         : create_version_range,
+            mod_credits                  : mod_credits,
+            jei_version_range            : jei_version_range,
+            toughasnails_version_range   : toughasnails_version_range,
+            coldsweat_version_range      : coldsweat_version_range,
+    ]
+    inputs.properties(props)
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand props
+    }
+    dependsOn 'generateTestStructure'
+}
+
+// GameTests need structure templates. Rather than committing binary files, write empty (all air) structures in the
+// vanilla NBT format: data/frostworks/structure/empty_<x>x<y>x<z>.nbt
+def testStructures = [[16, 10, 16], [56, 24, 24], [24, 8, 24]]
+tasks.register('generateTestStructure') {
+    def dir = generatedResources.get().dir('data/frostworks/structure').asFile
+    inputs.property('sizes', testStructures.toString())
+    outputs.dir(dir)
+    doLast {
+        dir.mkdirs()
+        testStructures.each { size ->
+            def bytes = new ByteArrayOutputStream()
+            new java.util.zip.GZIPOutputStream(bytes).withCloseable { gz ->
+                def o = new DataOutputStream(gz)
+                def name = { String s -> o.writeUTF(s) }
+                o.writeByte(10); name('')                             // root compound
+                o.writeByte(3); name('DataVersion'); o.writeInt(3955) // 1.21.1
+                o.writeByte(9); name('size'); o.writeByte(3); o.writeInt(3)
+                size.each { o.writeInt(it) }
+                o.writeByte(9); name('palette'); o.writeByte(10); o.writeInt(1)
+                o.writeByte(8); name('Name'); o.writeUTF('minecraft:air'); o.writeByte(0)
+                o.writeByte(9); name('blocks'); o.writeByte(10); o.writeInt(0)
+                o.writeByte(9); name('entities'); o.writeByte(10); o.writeInt(0)
+                o.writeByte(0)                                        // end root
+                o.flush()
+            }
+            new File(dir, "empty_${size[0]}x${size[1]}x${size[2]}.nbt").bytes = bytes.toByteArray()
+        }
+    }
+}
+
+// The dev server reads the console (scripted "stop").
+tasks.named('runServer') {
+    standardInput = System.in
+}
+
+// The GameTests are written once (shared/src/gametest/java), without the loader's two annotations;
+// this build adds its own (GameTestHolder, PrefixGameTestTemplate) to every test class.
+def generatedGameTests = layout.buildDirectory.dir('generated/sources/gametest')
+def generateGameTests = tasks.register('generateGameTests', Copy) {
+    from rootProject.file('shared/src/gametest/java')
+    into generatedGameTests
+    filter { String line ->
+        line ==~ /^public final class \w+GameTests\b.*/
+                ? "@net.neoforged.neoforge.gametest.GameTestHolder(com.frostworks.Frostworks.MODID)\n" +
+                  "@net.neoforged.neoforge.gametest.PrefixGameTestTemplate(false)\n" + line
+                : line
+    }
+}
+sourceSets.main.java.srcDir(generateGameTests.map { it.destinationDir })
+
+// Cold Sweat 2.4.4 for NeoForge 1.21.1 (CurseForge file 9215368). Our cold room modifier extends its TempModifier:
+// compiled against it, never in our jar (compileOnly); the game with it is runClientColdSweat alone.
+dependencies {
+    compileOnly 'curse.maven:cold-sweat-506194:9215368'
+    coldSweatRuntimeOnly 'curse.maven:cold-sweat-506194:9215368'
+}
+
+// TerraFirmaCraft 1.21.1-4.2.13 (CurseForge file 9398023, the official jar), compile only: food preserving
+// (compat/tfc) puts its traits on TFC's food. Never in our jar; called only when TFC is loaded.
+// Its test game is runClientTerraFirmaCraft (run-tfc/), TFC and Patchouli at run time there only.
+dependencies {
+    compileOnly 'curse.maven:terrafirmacraft-302973:9398023'
+    terraFirmaCraftRuntimeOnly 'curse.maven:terrafirmacraft-302973:9398023'
+    terraFirmaCraftRuntimeOnly 'curse.maven:patchouli-306770:7730942' // Patchouli 1.21.1-93, required by TFC
+}

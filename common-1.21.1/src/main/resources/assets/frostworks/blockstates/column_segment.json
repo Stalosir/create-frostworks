@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "corner=north_west,part=single": { "model": "frostworks:block/column_segment/corner_single" },
+    "corner=north_west,part=bottom": { "model": "frostworks:block/column_segment/corner_bottom" },
+    "corner=north_west,part=middle": { "model": "frostworks:block/column_segment/corner_middle" },
+    "corner=north_west,part=top": { "model": "frostworks:block/column_segment/corner_top" },
+    "corner=north_east,part=single": { "model": "frostworks:block/column_segment/corner_single", "y": 90 },
+    "corner=north_east,part=bottom": { "model": "frostworks:block/column_segment/corner_bottom", "y": 90 },
+    "corner=north_east,part=middle": { "model": "frostworks:block/column_segment/corner_middle", "y": 90 },
+    "corner=north_east,part=top": { "model": "frostworks:block/column_segment/corner_top", "y": 90 },
+    "corner=south_east,part=single": { "model": "frostworks:block/column_segment/corner_single", "y": 180 },
+    "corner=south_east,part=bottom": { "model": "frostworks:block/column_segment/corner_bottom", "y": 180 },
+    "corner=south_east,part=middle": { "model": "frostworks:block/column_segment/corner_middle", "y": 180 },
+    "corner=south_east,part=top": { "model": "frostworks:block/column_segment/corner_top", "y": 180 },
+    "corner=south_west,part=single": { "model": "frostworks:block/column_segment/corner_single", "y": 270 },
+    "corner=south_west,part=bottom": { "model": "frostworks:block/column_segment/corner_bottom", "y": 270 },
+    "corner=south_west,part=middle": { "model": "frostworks:block/column_segment/corner_middle", "y": 270 },
+    "corner=south_west,part=top": { "model": "frostworks:block/column_segment/corner_top", "y": 270 }
+  }
+}

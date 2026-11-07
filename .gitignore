@@ -1,0 +1,34 @@
+/create/
+/help/
+build/
+run/
+.gradle/
+libs/
+.idea/
+*.iml
+out/
+run-pilote/
+run-gametest/
+libs-nuclear/
+# 1.1: Tough As Nails and GlitchCore jars, and their test games
+libs-tan/
+run-toughasnails/
+run-coldsweat/
+run-tfc/
+# 1.1: the TerraFirmaGreg pack (its archive and Forge installer) and its instance
+libs-tfg/
+run-tfg/
+
+# CurseForge captures (made by the vitrine pilot scenario, redone at will)
+/branding/captures/
+run-server/
+
+# CurseForge page, buttons and banner (made outside the mod), local preview settings
+branding/curseforge-*
+branding/form-header.png
+.claude/
+
+# The author's own notes: development notes and the reports of each version (kept locally, not published)
+/docs/dev/
+/docs/1.0/
+/docs/1.1/

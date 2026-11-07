@@ -1,0 +1,7 @@
+// The loaders are subprojects, as in Create Kart. neoforge/ is the
+// NeoForge 1.21.1 mod (Create 6.0.10), forge/ the Forge 1.20.1 one (Create 6.0.4). The game folders (run, run-gametest,
+// run-pilote) stay here, at the root.
+plugins {
+    // https://projects.neoforged.net/neoforged/moddevgradle (legacyforge for Forge 1.20.1 comes in the same plugin)
+    id 'net.neoforged.moddev' version '2.0.148' apply false
+}

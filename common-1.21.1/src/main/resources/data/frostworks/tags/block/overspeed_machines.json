@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "create:mechanical_mixer",
+    "create:mechanical_saw"
+  ]
+}

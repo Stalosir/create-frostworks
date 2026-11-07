@@ -1,0 +1,66 @@
+{
+	"format_version": "26.3",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "frostworks:block/column_segment/frost_tank",
+		"1": "frostworks:block/column_segment/frost_tank_window",
+		"particle": "frostworks:block/column_segment/frost_tank"
+	},
+	"elements": [
+		{
+			"name": "SideRight",
+			"from": [3, 0, 3],
+			"to": [12, 16, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 3]},
+			"faces": {
+				"north": {"uv": [4, 0, 16, 16], "texture": "#0"},
+				"east": {"uv": [15, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 12, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "Window",
+			"from": [4, 0, 12],
+			"to": [4, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 8, 12]},
+			"faces": {
+				"east": {"uv": [12, 0, 16, 16], "texture": "#1"},
+				"west": {"uv": [8, 0, 12, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "Window",
+			"from": [12, 0, 4],
+			"to": [16, 16, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 3.05]},
+			"faces": {
+				"north": {"uv": [12, 0, 16, 16], "texture": "#1"},
+				"south": {"uv": [8, 0, 12, 16], "texture": "#1"}
+			}
+		},
+		{
+			"name": "SideLeft",
+			"from": [3, 0, 3],
+			"to": [4, 16, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 0, 0]},
+			"faces": {
+				"east": {"uv": [2, 0, 14, 16], "texture": "#0"},
+				"south": {"uv": [14, 0, 15, 16], "texture": "#0"},
+				"west": {"uv": [2, 0, 14, 16], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "group",
+			"origin": [1, 0, 1],
+			"scope": 0,
+			"color": 0,
+			"children": []
+		},
+		0,
+		1,
+		2,
+		3
+	]
+}

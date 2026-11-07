@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "frostworks:chilled_gold_ore",
+    "frostworks:chilled_deepslate_gold_ore",
+    "frostworks:chilled_redstone_ore",
+    "frostworks:chilled_deepslate_redstone_ore",
+    "frostworks:chilled_diamond_ore",
+    "frostworks:chilled_deepslate_diamond_ore",
+    "frostworks:chilled_emerald_ore",
+    "frostworks:chilled_deepslate_emerald_ore",
+    "frostworks:chilled_zinc_ore",
+    "frostworks:chilled_deepslate_zinc_ore"
+  ]
+}

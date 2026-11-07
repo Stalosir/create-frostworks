@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [ { "item": "frostworks:chilled_iron_ore" } ],
+  "result": { "id": "minecraft:iron_ore", "count": 1, "components": { "frostworks:chilled": {} } }
+}

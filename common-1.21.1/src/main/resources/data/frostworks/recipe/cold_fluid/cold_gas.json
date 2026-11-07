@@ -1,0 +1,6 @@
+{
+  "type": "frostworks:cold_fluid",
+  "ingredients": [ { "type": "neoforge:single", "fluid": "frostworks:cold_gas", "amount": 15 } ],
+  "temperature": -10,
+  "coverage": 24
+}

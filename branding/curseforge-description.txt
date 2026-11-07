@@ -1,0 +1,21 @@
+==================== [IMAGE : cf_0_titre.png] ====================
+
+256 RPM is Create's limit. Unless you keep it cold.
+
+Seal a room with insulated walls, fill it with cold, and your machines can spin up to 384 RPM.
+Keep the cold going, or watch them break.
+
+==================== [IMAGE : cf_2_lunettes.png] ====================
+
+Your first chills come from the Cryogenic Infuser, the frozen cousin of the Mechanical Press.
+Iron sheets, kelp, ice, even your ores: if it fits on a belt, it can be frozen.
+
+==================== [GIF : cf_4_infuseur.gif] ====================
+
+Then go bigger: a Frosium tower that stores your spare rotation and gives it back when the factory needs it.
+
+Every block has its own Ponder scene. Hold W, and the rest explains itself.
+
+==================== [GIF : cf_7_ponder.gif] ====================
+
+Create: Frostworks. Industrial cold, the Create way.

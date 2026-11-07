@@ -1,0 +1,20 @@
+{
+  "loader": "neoforge:composite",
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "frostworks:block/cold_wall"
+  },
+  "children": {
+    "wall": {
+      "parent": "frostworks:block/cold_wall",
+      "render_type": "minecraft:solid"
+    },
+    "tint": {
+      "parent": "frostworks:block/cold_wall_tint/tint_layer",
+      "textures": {
+        "tint": "frostworks:block/cold_wall_tint/cold_wall_lime_single"
+      },
+      "render_type": "minecraft:translucent"
+    }
+  }
+}

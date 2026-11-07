@@ -1,0 +1,10 @@
+{
+  "type": "frostworks:distilling",
+  "inputs": [
+    { "fluid": "frostworks:cold_gas" },
+    { "fluid": "minecraft:water" }
+  ],
+  "ice": true,
+  "result": "frostworks:frosium",
+  "yield": "energy"
+}

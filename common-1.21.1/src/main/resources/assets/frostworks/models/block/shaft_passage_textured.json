@@ -1,0 +1,7 @@
+{
+  "parent": "frostworks:block/shaft_passage",
+  "textures": {
+    "casing": "frostworks:block/cold_wall",
+    "opening": "frostworks:block/shaft_passage"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [ { "item": "frostworks:chilled_deepslate_coal_ore" } ],
+  "result": { "id": "minecraft:deepslate_coal_ore", "count": 1, "components": { "frostworks:chilled": {} } }
+}

@@ -1,0 +1,13 @@
+{
+  "neoforge:conditions": [ { "type": "frostworks:tfg_compat" } ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": { "tag": "c:storage_blocks/iron" },
+    "P": { "tag": "c:plates/wrought_iron" },
+    "S": { "tag": "c:shafts" },
+    "T": { "tag": "c:stone" }
+  },
+  "pattern": [ " S ", "PTP", " I " ],
+  "result": { "count": 1, "id": "frostworks:cryo_infuser" }
+}

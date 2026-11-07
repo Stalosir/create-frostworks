@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:item/generated",
+  "loader": "neoforge:item_layers",
+  "textures": {
+    "layer0": "minecraft:item/raw_copper",
+    "layer1": "frostworks:item/ore/raw_copper_frigorifie"
+  },
+  "render_types": {
+    "minecraft:cutout": [0],
+    "minecraft:translucent": [1]
+  }
+}

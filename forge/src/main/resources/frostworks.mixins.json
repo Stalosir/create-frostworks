@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.frostworks.mixin",
+  "plugin": "com.frostworks.mixinplugin.FwMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "ItemRendererMixin"
+  ],
+  "mixins": [
+    "RotationPropagatorMixin",
+    "KineticStressMixin",
+    "CrushingWheelControllerMixin",
+    "MillstoneMixin",
+    "BasinRecipeMixin",
+    "CreateTankMixin",
+    "IceBlockMixin",
+    "SnowLayerBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

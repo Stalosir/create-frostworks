@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "frostworks:block/ore/chilled_gold_ore"
+    }
+  }
+}

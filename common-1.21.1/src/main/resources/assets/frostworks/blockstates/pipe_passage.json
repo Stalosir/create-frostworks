@@ -1,0 +1,22 @@
+{
+  "multipart": [
+    { "when": { "axis": "x" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "x": 270 } },
+    { "when": { "axis": "x" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "x": 90 } },
+    { "when": { "axis": "x" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "y": 180 } },
+    { "when": { "axis": "x" }, "apply": { "model": "frostworks:block/pipe_passage/flat" } },
+    { "when": { "axis": "x" }, "apply": { "model": "frostworks:block/pipe_passage/open", "y": 90 } },
+    { "when": { "axis": "x" }, "apply": { "model": "frostworks:block/pipe_passage/open", "y": 270 } },
+    { "when": { "axis": "y" }, "apply": { "model": "frostworks:block/pipe_passage/open", "x": 270 } },
+    { "when": { "axis": "y" }, "apply": { "model": "frostworks:block/pipe_passage/open", "x": 90 } },
+    { "when": { "axis": "y" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "y": 180 } },
+    { "when": { "axis": "y" }, "apply": { "model": "frostworks:block/pipe_passage/flat" } },
+    { "when": { "axis": "y" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "y": 90 } },
+    { "when": { "axis": "y" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "y": 270 } },
+    { "when": { "axis": "z" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "x": 270 } },
+    { "when": { "axis": "z" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "x": 90 } },
+    { "when": { "axis": "z" }, "apply": { "model": "frostworks:block/pipe_passage/open", "y": 180 } },
+    { "when": { "axis": "z" }, "apply": { "model": "frostworks:block/pipe_passage/open" } },
+    { "when": { "axis": "z" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "y": 90 } },
+    { "when": { "axis": "z" }, "apply": { "model": "frostworks:block/pipe_passage/flat", "y": 270 } }
+  ]
+}

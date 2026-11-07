@@ -1,0 +1,10 @@
+{
+  "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "tfc" } ],
+  "type": "frostworks:food_preserving",
+  "ingredients": [
+    { "type": "frostworks:perishable_food" },
+    { "type": "neoforge:single", "amount": 50, "fluid": "frostworks:cold_gas" }
+  ],
+  "results": [],
+  "level": 1
+}

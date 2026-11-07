@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": { "item": "create:fluid_pipe" },
+    "W": { "item": "frostworks:cold_wall" }
+  },
+  "pattern": [
+    " P ",
+    "PWP",
+    " P "
+  ],
+  "result": { "count": 1, "id": "frostworks:column_base" }
+}

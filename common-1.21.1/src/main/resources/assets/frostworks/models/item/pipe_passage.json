@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "frostworks:block/pipe_passage/opening",
+    "side": "frostworks:block/cold_wall"
+  }
+}

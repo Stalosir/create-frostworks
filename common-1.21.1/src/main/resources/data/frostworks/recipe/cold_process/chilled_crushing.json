@@ -1,0 +1,12 @@
+{
+  "type": "frostworks:cold_process",
+  "process": "create:crushing",
+  "recipe": "",
+  "mode": "bonus",
+  "ingredients": [ { "tag": "c:ores", "chilled": true }, { "tag": "c:raw_materials", "chilled": true } ],
+  "steps": [
+    { "results": [ { "copy": "main", "count": 1, "chance": 0.15 } ] },
+    { "temperature": -10, "results": [ { "copy": "main", "count": 1, "chance": 0.25 } ] },
+    { "temperature": -20, "results": [ { "copy": "main", "count": 1, "chance": 0.35 } ] }
+  ]
+}

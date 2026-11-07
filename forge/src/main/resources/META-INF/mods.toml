@@ -1,0 +1,49 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+displayName = "${mod_name}"
+logoFile = "logo.png"
+authors = "${mod_author}"
+description = '''${mod_description}'''
+credits = "${mod_credits}"
+
+[[dependencies.${mod_id}]]
+modId = "forge"
+mandatory = true
+versionRange = "[47.2.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "create"
+mandatory = true
+versionRange = "[6.0.4,6.1)"
+ordering = "AFTER"
+side = "BOTH"
+
+# Tough As Nails, optional (a closed cold room makes its player cold); the versions its API was read in
+[[dependencies.${mod_id}]]
+modId = "toughasnails"
+mandatory = false
+versionRange = "${toughasnails_version_range_forge}"
+ordering = "NONE"
+side = "BOTH"
+
+# Cold Sweat, optional (a closed cold room is a cold place for it); 2.4, whose API this mod is built against
+[[dependencies.${mod_id}]]
+modId = "cold_sweat"
+mandatory = false
+versionRange = "${coldsweat_version_range}"
+ordering = "NONE"
+side = "BOTH"

@@ -1,0 +1,20 @@
+{
+  "loader": "neoforge:composite",
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/deepslate_iron_ore"
+  },
+  "children": {
+    "ore": {
+      "parent": "minecraft:block/deepslate_iron_ore",
+      "render_type": "minecraft:solid"
+    },
+    "frost": {
+      "parent": "frostworks:block/ore/frost_shell",
+      "textures": {
+        "frost": "frostworks:block/ore/deepslate_iron_ore_frigorifie"
+      },
+      "render_type": "minecraft:translucent"
+    }
+  }
+}

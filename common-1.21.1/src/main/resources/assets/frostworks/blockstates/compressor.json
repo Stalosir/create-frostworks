@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "frostworks:block/compressor/block",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "frostworks:block/compressor/block",
+      "x": 270,
+      "y": 270
+    },
+    "facing=north": {
+      "model": "frostworks:block/compressor/block",
+      "x": 270,
+      "y": 180
+    },
+    "facing=south": {
+      "model": "frostworks:block/compressor/block",
+      "x": 270
+    },
+    "facing=up": {
+      "model": "frostworks:block/compressor/block"
+    },
+    "facing=west": {
+      "model": "frostworks:block/compressor/block",
+      "x": 270,
+      "y": 90
+    }
+  }
+}

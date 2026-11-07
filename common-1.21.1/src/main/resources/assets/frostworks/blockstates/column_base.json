@@ -1,0 +1,17 @@
+{
+  "variants": {
+    "shape=single": { "model": "frostworks:block/column_base/single" },
+    "shape=pair_east": { "model": "frostworks:block/column_base/pair" },
+    "shape=pair_south": { "model": "frostworks:block/column_base/pair", "y": 90 },
+    "shape=pair_west": { "model": "frostworks:block/column_base/pair", "y": 180 },
+    "shape=pair_north": { "model": "frostworks:block/column_base/pair", "y": 270 },
+    "shape=corner_nw": { "model": "frostworks:block/column_base/corner" },
+    "shape=corner_ne": { "model": "frostworks:block/column_base/corner", "y": 90 },
+    "shape=corner_se": { "model": "frostworks:block/column_base/corner", "y": 180 },
+    "shape=corner_sw": { "model": "frostworks:block/column_base/corner", "y": 270 },
+    "shape=elbow_nw": { "model": "frostworks:block/column_base/elbow" },
+    "shape=elbow_ne": { "model": "frostworks:block/column_base/elbow", "y": 90 },
+    "shape=elbow_se": { "model": "frostworks:block/column_base/elbow", "y": 180 },
+    "shape=elbow_sw": { "model": "frostworks:block/column_base/elbow", "y": 270 }
+  }
+}

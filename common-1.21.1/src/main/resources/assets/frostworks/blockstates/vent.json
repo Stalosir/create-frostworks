@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "frostworks:block/vent/block",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "frostworks:block/vent/block",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "frostworks:block/vent/block",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "frostworks:block/vent/block",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "frostworks:block/vent/block"
+    },
+    "facing=west": {
+      "model": "frostworks:block/vent/block",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

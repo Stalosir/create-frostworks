@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "frostworks:chilled_copper_ore",
+    "frostworks:chilled_deepslate_copper_ore",
+    "frostworks:chilled_iron_ore",
+    "frostworks:chilled_deepslate_iron_ore",
+    "frostworks:chilled_lapis_ore",
+    "frostworks:chilled_deepslate_lapis_ore"
+  ]
+}

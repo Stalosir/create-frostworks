@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:dried_kelp",
+    { "id": "tfc:food/dried_kelp", "required": false }
+  ]
+}

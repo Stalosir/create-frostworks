@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "frostworks:compressor",
+    "frostworks:vent",
+    "frostworks:cold_wall",
+    "frostworks:insulated_door",
+    "frostworks:shaft_passage",
+    "frostworks:column_base",
+    "frostworks:column_segment",
+    "frostworks:reservoir",
+    "frostworks:expander",
+    "frostworks:cryo_infuser",
+    "frostworks:pipe_passage",
+    "frostworks:chilled_coal_ore", "frostworks:chilled_deepslate_coal_ore", "frostworks:chilled_copper_ore",
+    "frostworks:chilled_deepslate_copper_ore", "frostworks:chilled_iron_ore", "frostworks:chilled_deepslate_iron_ore",
+    "frostworks:chilled_gold_ore", "frostworks:chilled_deepslate_gold_ore", "frostworks:chilled_redstone_ore",
+    "frostworks:chilled_deepslate_redstone_ore", "frostworks:chilled_lapis_ore", "frostworks:chilled_deepslate_lapis_ore",
+    "frostworks:chilled_diamond_ore", "frostworks:chilled_deepslate_diamond_ore", "frostworks:chilled_emerald_ore",
+    "frostworks:chilled_deepslate_emerald_ore", "frostworks:chilled_nether_gold_ore", "frostworks:chilled_nether_quartz_ore",
+    "frostworks:chilled_zinc_ore", "frostworks:chilled_deepslate_zinc_ore"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": { "item": "frostworks:cold_wall" },
+    "K": { "item": "frostworks:cold_dried_kelp" }
+  },
+  "pattern": [
+    "W",
+    "K"
+  ],
+  "result": { "count": 1, "id": "frostworks:insulated_door" }
+}

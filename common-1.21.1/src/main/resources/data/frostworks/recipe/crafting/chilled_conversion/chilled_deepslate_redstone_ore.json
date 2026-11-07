@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [ { "item": "frostworks:chilled_deepslate_redstone_ore" } ],
+  "result": { "id": "minecraft:deepslate_redstone_ore", "count": 1, "components": { "frostworks:chilled": {} } }
+}

@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [ { "type": "neoforge:not", "value": { "type": "frostworks:tfg_compat" } } ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": { "item": "create:shaft" },
+    "P": { "item": "create:iron_sheet" },
+    "T": { "item": "minecraft:stone" },
+    "I": { "tag": "c:storage_blocks/iron" }
+  },
+  "pattern": [
+    " S ",
+    "PTP",
+    " I "
+  ],
+  "result": { "count": 1, "id": "frostworks:cryo_infuser" }
+}

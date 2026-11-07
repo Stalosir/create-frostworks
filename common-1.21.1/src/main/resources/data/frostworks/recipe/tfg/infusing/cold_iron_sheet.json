@@ -1,0 +1,9 @@
+{
+  "neoforge:conditions": [ { "type": "frostworks:tfg_compat" } ],
+  "type": "frostworks:infusing",
+  "ingredients": [
+    { "tag": "c:plates/wrought_iron" },
+    { "type": "neoforge:single", "amount": 500, "fluid": "frostworks:cold_gas" }
+  ],
+  "results": [ { "id": "frostworks:cold_iron_sheet" } ]
+}

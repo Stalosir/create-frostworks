@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": { "layer0": "frostworks:item/cold_iron_sheet" }
+}

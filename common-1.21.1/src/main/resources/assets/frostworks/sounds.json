@@ -1,0 +1,12 @@
+{
+  "cryo_infuser.infuse": {
+    "subtitle": "frostworks.subtitle.cryo_infuser.infuse",
+    "sounds": [
+      { "name": "minecraft:entity/player/hurt/freeze_hurt1", "pitch": 0.5, "volume": 0.35 },
+      { "name": "minecraft:entity/player/hurt/freeze_hurt2", "pitch": 0.5, "volume": 0.35 },
+      { "name": "minecraft:entity/player/hurt/freeze_hurt3", "pitch": 0.5, "volume": 0.35 },
+      { "name": "minecraft:entity/player/hurt/freeze_hurt4", "pitch": 0.5, "volume": 0.35 },
+      { "name": "minecraft:entity/player/hurt/freeze_hurt5", "pitch": 0.5, "volume": 0.35 }
+    ]
+  }
+}

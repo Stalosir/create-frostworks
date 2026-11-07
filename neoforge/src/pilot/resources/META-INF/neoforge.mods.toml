@@ -1,0 +1,16 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "frostworks_pilot"
+version = "0.0.0"
+displayName = "Frostworks pilot (dev checks only)"
+description = '''Scripted client used by runClientPilote only. Never loaded by runClient.'''
+
+[[dependencies.frostworks_pilot]]
+modId = "frostworks"
+type = "required"
+versionRange = "[0,)"
+ordering = "AFTER"
+side = "BOTH"

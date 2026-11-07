@@ -1,0 +1,11 @@
+{
+  "neoforge:conditions": [ { "type": "frostworks:tfg_compat" } ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": { "item": "frostworks:cold_iron_sheet" },
+    "C": { "tag": "tfc:barrels" }
+  },
+  "pattern": [ "B", "C", "B" ],
+  "result": { "count": 1, "id": "frostworks:reservoir" }
+}
